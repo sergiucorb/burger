@@ -8,7 +8,6 @@ const burger = (props) => {
             return <BurgerIngredients key={igKey+index} type={igKey}/>
         });
     }).reduce((arr, el) => {
-        console.log(arr)
         return arr.concat(el);
     }, []);
     if (transformedIngredients.length === 0){
