@@ -7,7 +7,7 @@ const burgerControl = (props) => {
             <div className={classes.Label}>
                 {props.label}
             </div>
-            <button onClick={props.removeIngredient} className={classes.Less}>
+            <button onClick={props.removeIngredient} className={classes.Less} disabled={props.disabled}>
                 Less
             </button>
 
