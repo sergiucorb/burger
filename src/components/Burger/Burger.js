@@ -2,7 +2,7 @@ import React from 'react';
 import BurgerIngredients from "./BurgerIngredients/BurgerIngredients";
 import classes from './Burger.css'
 
-const burger = (props) => {
+const Burger = (props) => {
     let transformedIngredients = Object.keys(props.ingredients).map(igKey => {
         return [...Array(props.ingredients[igKey])].map((_, index) => {
             return <BurgerIngredients key={igKey+index} type={igKey}/>
@@ -21,4 +21,4 @@ const burger = (props) => {
         </div>
     )
 }
-export default burger;
+export default Burger;
