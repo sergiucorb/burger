@@ -3,14 +3,10 @@ import BurgerIngredients from "./BurgerIngredients/BurgerIngredients";
 import classes from './Burger.css'
 
 const Burger = (props) => {
-    let transformedIngredients = Object.keys(props.ingredients).map(igKey => {
-        return [...Array(props.ingredients[igKey])].map((_, index) => {
-            return <BurgerIngredients key={igKey+index} type={igKey}/>
-        });
-    }).reduce((arr, el) => {
-        return arr.concat(el);
-    }, []);
-    if (transformedIngredients.length === 0){
+    let transformedIngredients = props.ingredients.map((el, index) => {
+            return <BurgerIngredients key={index} type={el}/>
+    });
+    if (transformedIngredients.length === 0) {
         transformedIngredients = <p>Empty Burger</p>
     }
     return (
@@ -22,3 +18,4 @@ const Burger = (props) => {
     )
 }
 export default Burger;
+

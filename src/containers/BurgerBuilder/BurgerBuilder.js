@@ -9,33 +9,32 @@ const INGREDIENTS_PRICE = {
     salad: 0.4,
     cheese: 0.5,
     meat: 1.3,
-    bacon: 1.2
+    bacon: 1.2,
 }
+
+const INGREDIENTS = [
+    "bacon",
+    "cheese",
+    "meat",
+    "salad"
+]
 
 class BurgerBuilder extends Component {
     state = {
-        ingredients: {
-            salad: 0,
-            bacon: 0,
-            cheese: 0,
-            meat: 0,
-        },
+        ingredients: [],
         price: 0,
         purchasable: false,
         modal: false
     }
 
     addIngredientHandler = (type) => {
-        const oldCount = this.state.ingredients[type];
-        const counterIngredient = oldCount + 1;
-        const updateIngredients = {
+        const updateIngredients = [
             ...this.state.ingredients
-        }
-        updateIngredients[type] = counterIngredient;
+        ]
+        updateIngredients.push(type);
+        let newPrice = updateIngredients.reduce((total, type) =>
+            total + INGREDIENTS_PRICE[type], 0);
 
-        const priceIngredient = INGREDIENTS_PRICE[type];
-        const oldPrice = this.state.price;
-        const newPrice = priceIngredient + oldPrice;
         this.setState({
             ingredients: updateIngredients,
             price: newPrice
@@ -45,68 +44,40 @@ class BurgerBuilder extends Component {
     }
 
     removeIngredientHandler = (type) => {
-        const oldCount = this.state.ingredients[type];
-        const oldPrice = this.state.price;
-        let ingredientPrice = INGREDIENTS_PRICE[type];
-        let newCount = 0;
-        if (oldCount <= 0) {
-            ingredientPrice = 0;
-        } else {
-            newCount = oldCount - 1;
-        }
-        const updatedIngredients = {
+        const updateIngredients = [
             ...this.state.ingredients
-        }
-        updatedIngredients[type] = newCount;
-        const newPrice = oldPrice - ingredientPrice;
+        ]
+        updateIngredients.splice(updateIngredients.indexOf(type), 1);
+        let newPrice = updateIngredients.reduce((total, type) => total + INGREDIENTS_PRICE[type], 0);
         this.setState({
-            ingredients: updatedIngredients,
+            ingredients: updateIngredients,
             price: newPrice
         })
-        this.updatePurchaseHandler(updatedIngredients);
-    }
-
-    componentDidMount() {
-        const price = {...this.state.ingredients};
-        let totalPrice = 0;
-        for (let key in price) {
-            if (price[key] > 0) {
-                totalPrice += INGREDIENTS_PRICE[key] * price[key]
-            }
-        }
-        this.setState({
-            ...this.state.ingredients,
-            price: totalPrice
-        })
+        this.updatePurchaseHandler(updateIngredients);
     }
 
     updatePurchaseHandler(ingredients) {
-        const sum = Object.values(ingredients)
-            .reduce((sum, el) => {
-                return sum + el
-            });
-        this.setState({purchasable: sum > 0})
+        this.setState({purchasable: ingredients.length > 0})
     }
 
     showModal = () => {
-
         this.setState({modal: true})
     }
 
-    render() {
-        const disabledIngredient = {...this.state.ingredients};
-        for (let key in disabledIngredient) {
-            disabledIngredient[key] = disabledIngredient[key] <= 0;
-        }
+    closeModal = () => {
+        this.setState({modal: false})
+    }
 
+    render() {
         return (
             <Aux>
-                <Modal modal={this.state.modal}>
-                    <OrderSummary ingredients={this.state.ingredients}/>
+                <Modal modal={this.state.modal} closeModal={this.closeModal}>
+                    <OrderSummary allIngredients={INGREDIENTS} ingredients={this.state.ingredients}/>
                 </Modal>
                 <Burger ingredients={this.state.ingredients}/>
                 <BuildControls price={this.state.price}
-                               disabled={disabledIngredient}
+                               allIngredients={INGREDIENTS}
+                               ingredients={this.state.ingredients}
                                ingredientAdded={this.addIngredientHandler}
                                ingredientRemoved={this.removeIngredientHandler}
                                purchasable={this.state.purchasable}
