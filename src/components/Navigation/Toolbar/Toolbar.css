@@ -3,7 +3,7 @@
     height: 56px;
     display: flex;
     background-color: #702e05;
-    justify-content:space-between;
+    justify-content: space-between;
     align-items: center;
     padding: 0 20px;
     position: fixed;
@@ -12,8 +12,19 @@
     left: 0;
     box-sizing: border-box;
 }
+
 .Toolbar nav {
     height: 100%;
     cursor: pointer;
 
+}
+
+.Logo {
+    height: 80%;
+}
+
+@media (max-width: 499px) {
+    .DisplayOnlyDesktop {
+        display: none;
+    }
 }
