@@ -24,6 +24,9 @@
 }
 
 @media (max-width: 499px) {
+    .Toolbar{
+        flex-direction: row-reverse;
+    }
     .DisplayOnlyDesktop {
         display: none;
     }

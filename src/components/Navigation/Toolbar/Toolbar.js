@@ -3,13 +3,15 @@ import classes from './Toolbar.css'
 
 import Logo from "../../Logo/Logo";
 import NavigationItems from "../NavigationItems/NavigationItems";
+import Menu from "../../Menu/Menu";
 
 const toolbar = (props) => {
     return (
         <header className={classes.Toolbar}>
-            <div onClick={props.clicked}>
-                MENU
+            <div>
+                <Menu clicked={props.clicked}/>
             </div>
+
             <div className={classes.Logo}>
                 <Logo/>
             </div>
@@ -19,6 +21,8 @@ const toolbar = (props) => {
 
         </header>
     )
-
 };
 export default toolbar;
+
+
+
