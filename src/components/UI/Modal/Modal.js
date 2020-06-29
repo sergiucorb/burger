@@ -1,30 +1,40 @@
-import React from 'react';
+import React, {Component} from 'react';
 import classes from './Modal.css';
-import Aux from "../../../hoc/Aux";
+import Aux from "../../../hoc/Aux/Aux";
 
 import Backdrop from "../Backgrop/Backdrop";
 
-const modal = (props) => {
-    let styleDivX = {
-        display: "flex",
-        justifyContent: "flex-end",
-        cursor: "pointer"
+class Modal extends Component {
+
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        return nextProps.modal !== this.props.modal
     }
-    let styleShow = {
-        transform: props.modal ? 'translateY(0)' : 'translateY(-100vh)',
-        opacity: props.modal ? '1' : '0'
-    }
-    return (
-        <Aux>
-            <Backdrop show={props.modal} backdropClicked={props.closeModal}/>
-            <div className={classes.Modal} style={styleShow}>
-                <div style={styleDivX} onClick={props.closeModal}>
-                    x
+
+    render() {
+        let
+            styleDivX = {
+                display: "flex",
+                justifyContent: "flex-end",
+                cursor: "pointer"
+            }
+        let
+            styleShow = {
+                transform: this.props.modal ? 'translateY(0)' : 'translateY(-100vh)',
+                opacity: this.props.modal ? '1' : '0'
+            }
+        return (
+            <Aux>
+                <Backdrop show={this.props.modal} backdropClicked={this.props.closeModal}/>
+                <div className={classes.Modal} style={styleShow}>
+                    <div style={styleDivX} onClick={this.props.closeModal}>
+                        x
+                    </div>
+                    {this.props.children}
                 </div>
-                {props.children}
-            </div>
-        </Aux>
-    )
+            </Aux>
+        );
+    }
+
 }
 
-export default modal;
+export default Modal;

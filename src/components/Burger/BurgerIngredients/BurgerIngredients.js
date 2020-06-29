@@ -15,7 +15,7 @@ const burgerIngredients = (props) => {
                     <div className={classes.Seeds2}></div>
                 </div>
             break;
-        case ('meat'):
+        case (33):
             ingredients = <div className={classes.Meat}></div>
             break;
         case ('cheese'):
@@ -32,9 +32,14 @@ const burgerIngredients = (props) => {
 
     }
     return ingredients;
-}
+
+
+};
 
 burgerIngredients.prototype = {
-    type: PropTypes.string.isRequired
+    type: PropTypes.string.isRequired,
+
 };
+
+
 export default burgerIngredients;

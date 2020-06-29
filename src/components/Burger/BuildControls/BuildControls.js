@@ -5,7 +5,7 @@ import BuildControl from "../../../components/Burger/BuildControls/BuildControl/
 const buildControls = (props) => {
     const controls = props.allIngredients.map(el => {
         return {type: el, label: el}
-    })
+    });
 
     let buildControls = controls.map((item, index) => {
         return <BuildControl
@@ -14,7 +14,7 @@ const buildControls = (props) => {
             label={item.label} type={item.type}
             disabled={props.ingredients.filter(el => el === item.type).length === 0}
             key={index}/>
-    })
+    });
     return (
         <div className={classes.BuildControls}>
             <p>Price: <strong>{Math.abs(parseFloat(props.price.toFixed(2)))} $</strong></p>
