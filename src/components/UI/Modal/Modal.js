@@ -16,12 +16,12 @@ class Modal extends Component {
                 display: "flex",
                 justifyContent: "flex-end",
                 cursor: "pointer"
-            }
+            };
         let
             styleShow = {
                 transform: this.props.modal ? 'translateY(0)' : 'translateY(-100vh)',
                 opacity: this.props.modal ? '1' : '0'
-            }
+            };
         return (
             <Aux>
                 <Backdrop show={this.props.modal} backdropClicked={this.props.closeModal}/>
