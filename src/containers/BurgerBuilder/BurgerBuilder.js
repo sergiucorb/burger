@@ -8,14 +8,6 @@ import axios from '../../axios-orders';
 import Spinner from "../../components/UI/Spinner/Spinner";
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 
-const INGREDIENTS_PRICE = {
-    salad: 0.4,
-    cheese: 0.5,
-    meat: 1.3,
-    bacon: 1.2,
-};
-
-const INGREDIENTS = [];
 
 class BurgerBuilder extends Component {
     state = {
@@ -25,16 +17,23 @@ class BurgerBuilder extends Component {
         modal: false,
         loading: false,
         error: false,
+        ingredientsBlock: [],
+        ingredientsPrice: {
+            salad: 0.4,
+            cheese: 0.5,
+            meat: 1.3,
+            bacon: 1.2,
+        }
     };
 
+
     componentDidMount() {
-        console.log('didMount in BurgerBuilder')
         axios.get('https://react-burger-7e1a4.firebaseio.com/ingredients.json')
             .then(res => {
-                Object.keys(res.data).map(item => {
-                    return INGREDIENTS.push(item)
+                let ingredients = Object.keys(res.data).map(item => {
+                    return item;
                 });
-                this.setState({loading: false})
+                this.setState({loading: false, ingredientsBlock: ingredients})
             }).catch(err => {
             this.setState({error: true});
         })
@@ -46,7 +45,7 @@ class BurgerBuilder extends Component {
         ];
         updateIngredients.push(type);
         let newPrice = updateIngredients.reduce((total, type) =>
-            total + INGREDIENTS_PRICE[type]
+            total + this.state.ingredientsPrice[type]
             , 0);
 
         this.setState({
@@ -62,7 +61,7 @@ class BurgerBuilder extends Component {
             ...this.state.ingredients
         ];
         updateIngredients.splice(updateIngredients.indexOf(type), 1);
-        let newPrice = updateIngredients.reduce((total, type) => total + INGREDIENTS_PRICE[type], 0);
+        let newPrice = updateIngredients.reduce((total, type) => total + this.state.ingredientsPrice[type], 0);
         this.setState({
             ingredients: updateIngredients,
             price: newPrice
@@ -82,33 +81,56 @@ class BurgerBuilder extends Component {
         this.setState({modal: false})
     };
 
+    ingredientsTypeCount = (itemFind) => {
+        return this.state.ingredients.filter(item => item === itemFind).length;
+    };
     continuePurchasableHandler = () => {
-        this.setState({loading: true});
-        const order = {
-            ingredients: this.state.ingredients,
-            price: this.state.price,
-            customer: {
-                name: 'Sergiu Corb',
-                address: {
-                    street: "al iliului",
-                    city: 'cluj',
-                    postalCode: 432323
-                },
-                email: 'sergiu@yahoo.com'
+
+        this.ingredientsTypeCount('salad')
+        // this.setState({loading: true});
+        // const order = {
+        //     ingredients: this.state.ingredients,
+        //     price: this.state.price,
+        //     customer: {
+        //         name: 'Sergiu Corb',
+        //         address: {
+        //             street: "al iliului",
+        //             city: 'cluj',
+        //             postalCode: 432323
+        //         },
+        //         email: 'sergiu@yahoo.com'
+        //     }
+        // };
+        // axios.post('/orders.json', order)
+        //     .then(res => {
+        //         this.setState({loading: false, modal: false});
+        //         console.log(res)
+        //     })
+        //     .catch(err => {
+        //         this.setState({loading: false, modal: false});
+        //     })
+
+        const queryParams = [];
+        const ingredients = [...this.state.ingredients];
+        let ingredientsSorted = ingredients.sort();
+        ingredientsSorted.map((item, index) => {
+            if (ingredientsSorted[index] !== ingredientsSorted[index + 1]) {
+                queryParams.push(encodeURIComponent(ingredientsSorted[index]) + '=' + this.ingredientsTypeCount(ingredientsSorted[index]));
             }
-        };
-        axios.post('/orders.json', order)
-            .then(res => {
-                this.setState({loading: false, modal: false});
-                console.log(res)
-            })
-            .catch(err => {
-                this.setState({loading: false, modal: false});
-            })
+            return queryParams
+        });
+
+        queryParams.push('price=' + this.state.price)
+        const queryString = queryParams.join('&');
+
+        this.props.history.push({
+            pathname: '/checkout',
+            search: '?' + queryString
+        });
     };
 
     render() {
-        let orderSpinner = <OrderSummary allIngredients={INGREDIENTS}
+        let orderSpinner = <OrderSummary allIngredients={this.state.ingredientsBlock}
                                          ingredients={this.state.ingredients}
                                          closeModal={this.closeModal}
                                          purchasableContinue={this.continuePurchasableHandler}
@@ -117,12 +139,12 @@ class BurgerBuilder extends Component {
 
         let burger = !this.state.error ? <Spinner/> : <p style={{textAlign: 'center'}}>Ingredients can't be loaded!</p>;
 
-        if (INGREDIENTS.length > 0) {
+        if (this.state.ingredientsBlock.length > 0) {
             burger = (
                 <Aux>
                     <Burger ingredients={this.state.ingredients}/>
                     <BuildControls price={this.state.price}
-                                   allIngredients={INGREDIENTS}
+                                   allIngredients={this.state.ingredientsBlock}
                                    ingredients={this.state.ingredients}
                                    ingredientAdded={this.addIngredientHandler}
                                    ingredientRemoved={this.removeIngredientHandler}
