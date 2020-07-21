@@ -30,7 +30,7 @@ const orderSummary = (props) => {
 
                 <Button btnType='Danger' clicked={props.closeModal}>CANCEL</Button>
                 <Button btnType='Success' clicked={props.purchasableContinue}>CONTINUE</Button>
-                <p style={stylePrice}>Price: <span style={boldPrice}>{props.price}</span> $</p>
+                <p style={stylePrice}>Price: <span style={boldPrice}>{props.price.toFixed(2)}</span> $</p>
             </Aux>
         )
     }

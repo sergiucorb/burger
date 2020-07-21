@@ -81,7 +81,6 @@ class ContactData extends Component {
 
             }
         },
-        price: '',
         loading: false,
         isValidForm: false
     };
