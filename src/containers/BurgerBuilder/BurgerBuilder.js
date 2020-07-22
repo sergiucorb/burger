@@ -12,19 +12,10 @@ import {addIngredients, removeIngredients} from "../../store/actions";
 
 class BurgerBuilder extends PureComponent {
     state = {
-        ingredients: [],
-        price: 0,
-        purchasable: false,
         modal: false,
         loading: false,
         error: false,
         ingredientsBlock: [],
-        ingredientsPrice: {
-            salad: 0.4,
-            cheese: 0.5,
-            meat: 1.3,
-            bacon: 1.2,
-        }
     };
 
 
@@ -40,22 +31,8 @@ class BurgerBuilder extends PureComponent {
         })
     }
 
-    // componentDidUpdate(prevProps, prevState, snapshot) {
-    //     if ((this.props.ingredients) && this.props.ingredients.length !== prevProps.ingredients.length) {
-    //         console.log(this.props.ingredients)
-    //         console.log(prevProps.ingredients)
-    //         this.updatePurchaseHandler(this.props.ingredients);
-    //     } else {
-    //         // this.updatePurchaseHandler(this.props.ingredients);
-    //
-    //         // this.updatePurchaseHandler(this.props.ingredients);
-    //         console.log(1231)
-    //     }
-    //
-    // }
-
     updatePurchaseHandler(ingredients) {
-        this.setState({purchasable: ingredients.length > 0})
+        return ingredients.length > 0
     }
 
     showModal = () => {
@@ -66,36 +43,13 @@ class BurgerBuilder extends PureComponent {
         this.setState({modal: false})
     };
 
-    ingredientsTypeCount = (itemFind) => {
-        return this.props.ingredients.filter(item => item === itemFind).length;
-    };
+
     continuePurchasableHandler = () => {
-        const queryParams = [];
-        const ingredients = [...this.props.ingredients];
-        let ingredientsSorted = ingredients.sort();
-        ingredientsSorted.map((item, index) => {
-            if (ingredientsSorted[index] !== ingredientsSorted[index + 1]) {
-                queryParams.push(encodeURIComponent(ingredientsSorted[index]) + '=' + this.ingredientsTypeCount(ingredientsSorted[index]));
-            }
-            return queryParams
-        });
 
-        queryParams.push('price=' + this.props.price);
-        const queryString = queryParams.join('&');
-
-        this.props.history.push({
-            pathname: '/checkout',
-            search: '?' + queryString
-        });
+        this.props.history.push('/checkout');
     };
 
     render() {
-        if (this.props.ingredients.length > 0) {
-            this.setState({purchasable: true})
-        } else {
-            this.setState({purchasable: false})
-
-        }
         let orderSpinner = <OrderSummary allIngredients={this.state.ingredientsBlock}
                                          ingredients={this.props.ingredients}
                                          closeModal={this.closeModal}
@@ -111,9 +65,9 @@ class BurgerBuilder extends PureComponent {
                     <BuildControls price={this.props.price}
                                    allIngredients={this.state.ingredientsBlock}
                                    ingredients={this.props.ingredients}
-                                   ingredientAdded={(addedIngredient) => this.props.addIngredientHandler(addedIngredient)}
-                                   ingredientRemoved={(ingredient) => this.props.removeIngredientHandler(ingredient)}
-                                   purchasable={this.state.purchasable}
+                                   ingredientAdded={this.props.addIngredientHandler}
+                                   ingredientRemoved={this.props.removeIngredientHandler}
+                                   purchasable={this.updatePurchaseHandler(this.props.ingredients)}
                                    modal={this.showModal}/>
                 </Aux>
             );
@@ -121,7 +75,6 @@ class BurgerBuilder extends PureComponent {
         if (this.state.loading) {
             orderSpinner = <Spinner/>;
         }
-
         return (
             <Aux>
                 <Modal modal={this.state.modal} closeModal={this.closeModal}>
@@ -131,8 +84,6 @@ class BurgerBuilder extends PureComponent {
             </Aux>
         )
     }
-
-
 }
 
 const mapStateToProps = (state) => {
@@ -149,3 +100,26 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default withErrorHandler(connect(mapStateToProps, mapDispatchToProps)(BurgerBuilder), axios);
+
+
+// ingredientsTypeCount = (itemFind) => {
+//     return this.props.ingredients.filter(item => item === itemFind).length;
+// };
+
+//function continuePurchasableHandler()
+// const queryParams = [];
+// const ingredients = [...this.props.ingredients];
+// let ingredientsSorted = ingredients.sort();
+// ingredientsSorted.map((item, index) => {
+//     if (ingredientsSorted[index] !== ingredientsSorted[index + 1]) {
+//         queryParams.push(encodeURIComponent(ingredientsSorted[index]) + '=' + this.ingredientsTypeCount(ingredientsSorted[index]));
+//     }
+//     return queryParams
+// });
+//
+// queryParams.push('price=' + this.props.price);
+// const queryString = queryParams.join('&');
+
+
+// pathname: '/checkout',
+// search: '?' + queryString
