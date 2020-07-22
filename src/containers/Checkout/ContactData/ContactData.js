@@ -31,7 +31,8 @@ class ContactData extends Component {
                 },
                 value: '',
                 validation: {
-                    required: true
+                    required: true,
+                    isEmail: true
                 },
                 valid: false,
                 touched: false
@@ -54,14 +55,15 @@ class ContactData extends Component {
             postalCode: {
                 elementType: 'input',
                 elementConfig: {
-                    type: 'text',
+                    type: 'number',
                     placeholder: 'Postal Code'
                 },
                 value: '',
                 validation: {
                     required: true,
                     minLength: 5,
-                    maxLength: 10
+                    maxLength: 10,
+                    isNumeric: true
                 },
                 valid: false,
                 touched: false
@@ -121,6 +123,15 @@ class ContactData extends Component {
         }
         if (rules.maxLength) {
             isValid = value.length <= rules.maxLength && isValid
+        }
+        if (rules.isEmail) {
+            let regexEmail = /^[ ]*([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})[ ]*$/i;
+            isValid = regexEmail.test(value) && isValid
+        }
+        if (rules.isNumeric) {
+            let isNumeric = /^(0|[1-9][0-9]*)$/
+
+            isValid = isNumeric.test(value) && isValid
         }
         return isValid
     };
