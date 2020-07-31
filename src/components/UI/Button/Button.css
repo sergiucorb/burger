@@ -8,11 +8,15 @@
     padding: 10px;
     margin: 10px;
     font-weight: bold;
+
+    display: inline-block;
+
+    text-align: center;
 }
 
 .Button:first-of-type {
     margin-left: 0;
-    padding-left: 0;
+    /*padding-left: 0;*/
 }
 
 .Button:disabled {
@@ -25,5 +29,14 @@
 }
 
 .Danger {
-    color: #944317;
+    border: 1px solid red;
+    color: red;
+    border-radius: 3px;
+}
+
+.Danger:hover {
+    /*border: 1px solid red;*/
+    background-color: red;
+    color: white;
+    border-radius: 3px;
 }
