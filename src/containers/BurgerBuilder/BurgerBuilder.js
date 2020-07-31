@@ -8,27 +8,20 @@ import axios from '../../axios-orders';
 import Spinner from "../../components/UI/Spinner/Spinner";
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 import {connect} from "react-redux";
-import {addIngredients, removeIngredients} from "../../store/actions";
+import {addIngredients, removeIngredients, getIngredients} from "../../store/actions/index";
+import {resetBurger} from "../../store/actions";
 
 class BurgerBuilder extends PureComponent {
     state = {
         modal: false,
         loading: false,
-        error: false,
-        ingredientsBlock: [],
     };
 
-
     componentDidMount() {
-        axios.get('https://react-burger-7e1a4.firebaseio.com/ingredients.json')
-            .then(res => {
-                let ingredients = Object.keys(res.data).map(item => {
-                    return item;
-                });
-                this.setState({loading: false, ingredientsBlock: ingredients})
-            }).catch(err => {
-            this.setState({error: true});
-        })
+        this.props.getIngredientsKey();
+        if (this.props.redirect) {
+            this.props.resetBurger();
+        }
     }
 
     updatePurchaseHandler(ingredients) {
@@ -50,20 +43,20 @@ class BurgerBuilder extends PureComponent {
     };
 
     render() {
-        let orderSpinner = <OrderSummary allIngredients={this.state.ingredientsBlock}
+        let orderSpinner = <OrderSummary allIngredients={this.props.ingredientsBlock}
                                          ingredients={this.props.ingredients}
                                          closeModal={this.closeModal}
                                          purchasableContinue={this.continuePurchasableHandler}
                                          price={this.props.price}/>;
 
-        let burger = !this.state.error ? <Spinner/> : <p style={{textAlign: 'center'}}>Ingredients can't be loaded!</p>;
+        let burger = !this.props.error ? <Spinner/> : <p style={{textAlign: 'center'}}>Ingredients can't be loaded!</p>;
 
-        if (this.state.ingredientsBlock.length > 0) {
+        if (this.props.ingredientsBlock.length > 0) {
             burger = (
                 <Aux>
                     <Burger ingredients={this.props.ingredients}/>
                     <BuildControls price={this.props.price}
-                                   allIngredients={this.state.ingredientsBlock}
+                                   allIngredients={this.props.ingredientsBlock}
                                    ingredients={this.props.ingredients}
                                    ingredientAdded={this.props.addIngredientHandler}
                                    ingredientRemoved={this.props.removeIngredientHandler}
@@ -88,14 +81,19 @@ class BurgerBuilder extends PureComponent {
 
 const mapStateToProps = (state) => {
     return {
-        ingredients: state.burgerReducer.ingredients,
-        price: state.burgerReducer.price
+        ingredients: state.burgerBuilder.ingredients,
+        price: state.burgerBuilder.price,
+        ingredientsBlock: state.burgerBuilder.ingredientsBlock,
+        error: state.burgerBuilder.error,
+        redirect: state.order.redirect
     }
 };
 const mapDispatchToProps = (dispatch) => {
     return {
         addIngredientHandler: (addedIngredient) => dispatch(addIngredients(addedIngredient)),
         removeIngredientHandler: (removedIngredient) => dispatch(removeIngredients(removedIngredient)),
+        getIngredientsKey: () => dispatch(getIngredients()),
+        resetBurger: () => dispatch(resetBurger())
     }
 };
 

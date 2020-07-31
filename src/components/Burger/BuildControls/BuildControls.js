@@ -33,8 +33,8 @@ class BuildControls extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        ingredients: state.burgerReducer.ingredients,
-        price: state.burgerReducer.price
+        ingredients: state.burgerBuilder.ingredients,
+        price: state.burgerBuilder.price
     }
 }
 export default connect(mapStateToProps)(BuildControls);
