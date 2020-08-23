@@ -24,12 +24,14 @@ export const burgerBuilder = (state = initialState, action) => {
                 ...state,
                 error: !state.error,
                 ingredientsBlock: ingredientsBlock
-            }
+            };
+
         case(FETCH_INGREDIENTS_FAILED):
             return {
                 ...state,
                 error: !state.error
-            }
+            };
+
         case (ADD):
             const ingredients = state.ingredients.concat(action.payload);
             let currentPrice = state.price;
@@ -39,8 +41,8 @@ export const burgerBuilder = (state = initialState, action) => {
                 ...state,
                 ingredients: ingredients,
                 price: currentPrice,
-
             };
+
         case(REMOVE):
             const updateIngredients = state.ingredients;
             updateIngredients.splice(updateIngredients.indexOf(action.payload), 1);
@@ -52,12 +54,13 @@ export const burgerBuilder = (state = initialState, action) => {
                 ingredients: updateIngredients,
                 price: decreasePrice
             };
+
         case (RESET_BURGER):
             return {
                 ...state,
                 price: 0,
                 ingredients: []
-            }
+            };
     }
     return state
 

@@ -31,6 +31,7 @@ const withErrorHandler = (WrappedComponent, axios) => {
 
         render() {
             console.log('render')
+            console.log(this.state.error)
             return (
                 <Aux>
                     <Modal modal={this.state.error} closeModal={this.closeModal}>

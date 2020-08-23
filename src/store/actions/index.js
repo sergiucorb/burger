@@ -1,2 +1,3 @@
-export {addIngredients, removeIngredients,getIngredients,resetBurger} from './burgerBuilder';
-export {onSubmitOrder,getOrders,onLoading,getOrderStart,onDelete} from './order';
+export {addIngredients, removeIngredients, getIngredients, resetBurger} from './burgerBuilder';
+export {onSubmitOrder, getOrders, onLoading, onDelete, onView, switchRedirectToFalse,} from './order';
+export {onAuthSubmit} from './auth';

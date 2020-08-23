@@ -5,12 +5,11 @@
     outline: none;
     cursor: pointer;
     font: inherit;
-    padding: 10px;
+    padding: 10px 10px 10px 10px;
     margin: 10px;
     font-weight: bold;
-
+    width: 120px;
     display: inline-block;
-
     text-align: center;
 }
 
@@ -39,4 +38,20 @@
     background-color: red;
     color: white;
     border-radius: 3px;
+}
+
+.Info {
+    border: 1px solid dodgerblue;
+    color: dodgerblue;
+    border-radius: 3px;
+}
+
+.Info:hover {
+    background-color: dodgerblue;
+    color: white;;
+}
+@media (max-width: 500px) {
+    .Button{
+        margin: 10px 0;
+    }
 }

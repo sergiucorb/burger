@@ -1,0 +1,45 @@
+.Ingredients {
+    width: 30%;
+    border-right: 1px solid cyan;
+    border-bottom: 1px solid cyan;
+    box-shadow: 3px 4px 5px cyan;
+    height: auto;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: lightcyan;
+    box-sizing: border-box;
+}
+
+.Ingredients div {
+    display: flex;
+}
+
+.Ingredients p span {
+    border: 1px solid mediumseagreen;
+    box-shadow: 3px 4px 5px green;
+    margin: 10px 58px;
+    padding: 10px;
+    background-color: limegreen;
+    color: white;
+
+}
+
+.Ingredients div span li {
+    display: inline-block;
+    list-style: none;
+    border: 1px solid pink;
+    box-shadow: 3px 4px 5px hotpink;
+    margin: 10px 10px;
+    padding: 10px;
+    align-items: center;
+    background-color: lightpink;
+    color: black;
+}
+
+@media (max-width: 500px) {
+    .Ingredients {
+        width: 75%;
+        margin: 5px auto;
+        padding: 5px;
+    }
+}

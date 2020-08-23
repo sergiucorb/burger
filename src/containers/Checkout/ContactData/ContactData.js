@@ -102,7 +102,7 @@ class ContactData extends Component {
             price: this.props.price,
             orderData: formData
         };
-        this.props.onSubmitOrder(data)
+        this.props.onSubmitOrder(data,this.props.token)
 
     };
 
@@ -194,12 +194,13 @@ class ContactData extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        loading: state.order.loading
+        loading: state.order.loading,
+        token:state.auth.token
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        onSubmitOrder: (orderData) => dispatch(onSubmitOrder(orderData)),
+        onSubmitOrder: (orderData,token) => dispatch(onSubmitOrder(orderData,token)),
         // onRedirect: () => dispatch(onRedirect())
     }
 }

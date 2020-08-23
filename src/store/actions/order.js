@@ -5,7 +5,7 @@ import {
     ORDER_SUCCESS_REDIRECT,
     GET_ORDERS,
     GET_ORDERS_START,
-    GET_ORDERS_FAIL, DELETE_ORDER, DELETE_ORDER_FAIL, DELETE_ORDER_START
+    GET_ORDERS_FAIL, DELETE_ORDER, DELETE_ORDER_FAIL, DELETE_ORDER_START, VIEW_ORDER, SWITCH_REDIRECT_TO_FALSE
 } from "./types";
 import axios from '../../axios-orders';
 
@@ -33,15 +33,14 @@ const onRedirect = () => {
     }
 }
 
-export const onSubmitOrder = (data) => {
+export const onSubmitOrder = (data, token) => {
     console.log(data)
     return dispatch => {
         dispatch(onLoading())
-        axios.post('https://react-burger-7e1a4.firebaseio.com/orders.json', data)
+        axios.post('https://react-burger-7e1a4.firebaseio.com/orders.json?auth=' + token, data)
             .then(res => {
                 dispatch(orderSucceed(res.data.name, data));
                 dispatch(onRedirect())
-                console.log(55)
             })
             .catch(err => {
                 dispatch(orderFailed());
@@ -66,10 +65,10 @@ const getOrderFail = () => {
         type: GET_ORDERS_FAIL
     }
 }
-export const getOrders = () => {
+export const getOrders = (token) => {
     return dispatch => {
         dispatch(getOrderStart())
-        axios.get('https://react-burger-7e1a4.firebaseio.com/orders.json')
+        axios.get('https://react-burger-7e1a4.firebaseio.com/orders.json?auth=' + token)
             .then(res => {
                 let fetchingOrders = [];
                 for (let key in res.data) {
@@ -80,7 +79,7 @@ export const getOrders = () => {
                 }
                 dispatch(prepareGetOrder(fetchingOrders))
             }).catch(err => {
-            dispatch(getOrderFail());
+            dispatch(getOrderFail(err));
         })
     }
 }
@@ -111,5 +110,29 @@ export const onDelete = (id) => {
             }).catch(err => {
             dispatch(deleteOrderFail())
         })
+    }
+}
+const prepareViewOrder = (id, order) => {
+    return {
+        type: VIEW_ORDER,
+        id: id,
+        order: order,
+
+    }
+}
+export const onView = (id) => {
+    return dispatch => {
+        axios.get('https://react-burger-7e1a4.firebaseio.com/orders.json/', id)
+            .then(res => {
+                dispatch(prepareViewOrder(id, res))
+            })
+            .catch(err => {
+                return err
+            })
+    }
+}
+export const switchRedirectToFalse = () => {
+    return {
+        type: SWITCH_REDIRECT_TO_FALSE
     }
 }
