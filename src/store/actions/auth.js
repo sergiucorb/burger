@@ -12,6 +12,11 @@ export const logout = () => {
         type: AUTH_LOGOUT
     }
 }
+export const onLogout = () => {
+    return dispatch => {
+        dispatch(logout())
+    }
+}
 export const authCheckoutTimer = (expiresIn) => {
     return dispatch => {
         setTimeout(() => {
@@ -43,7 +48,6 @@ export const onAuthSubmit = (email, password, isSignIn) => {
         }
         axios.post(url, data)
             .then(res => {
-                console.log(res.data)
                 dispatch(onAuth(email, password, res.data.localId, res.data.idToken))
                 dispatch(authCheckoutTimer(res.data.expiresIn))
             })

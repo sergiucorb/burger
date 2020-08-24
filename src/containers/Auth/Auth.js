@@ -5,6 +5,7 @@ import Button from "../../components/UI/Button/Button";
 import {connect} from "react-redux";
 import {onAuthSubmit} from "../../store/actions";
 import Spinner from "../../components/UI/Spinner/Spinner";
+import {Redirect, withRouter} from "react-router";
 
 class Auth extends Component {
 
@@ -90,7 +91,6 @@ class Auth extends Component {
             ...this.state,
             isValidForm: false
         })
-
     }
     onSwitchSignIn = () => {
         this.setState(prevState => {
@@ -100,8 +100,11 @@ class Auth extends Component {
         })
     }
 
+
     render() {
-        console.log(this.state.isValidForm)
+        if (this.props.authRedirect) {
+            return <Redirect to={'/'}/>
+        }
         let formControls = [];
         for (let key in this.state.controls) {
             formControls.push({
@@ -162,8 +165,10 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
     return {
         loading: state.auth.loading,
-        error: state.auth.error
+        error: state.auth.error,
+        isAuth: state.auth.token !== null,
+        authRedirect: state.auth.redirect
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Auth);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Auth));
