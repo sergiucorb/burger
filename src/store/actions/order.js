@@ -103,8 +103,9 @@ const deleteOrderStart = () => {
 }
 export const onDelete = (id) => {
     return dispatch => {
+           let token = localStorage.getItem('token'); 
         dispatch(deleteOrderStart())
-        axios.delete('https://react-burger-7e1a4.firebaseio.com/orders.json/', {data: id})
+        axios.delete('https://react-burger-7e1a4.firebaseio.com/orders.json?auth=' + token, {data: id})
             .then(res => {
                 dispatch(prepareDeleteOrder(res, id))
             }).catch(err => {
@@ -120,10 +121,11 @@ const prepareViewOrder = (id, order) => {
 
     }
 }
-export const onView = (id) => {
+export const onView = (id,token) => {
     return dispatch => {
-        axios.get('https://react-burger-7e1a4.firebaseio.com/orders.json/', id)
+        axios.get('https://react-burger-7e1a4.firebaseio.com/orders.json?auth=' + token, id)
             .then(res => {
+                console.log(res)
                 dispatch(prepareViewOrder(id, res))
             })
             .catch(err => {

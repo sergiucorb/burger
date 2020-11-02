@@ -14,14 +14,19 @@ class ViewOrder extends Component {
 
         let order = '';
         if (this.props.redirect && this.props.orderDetails) {
-            let id = this.props.orderDetails.id
+            let id = this.props.orderDetails.id;
+
+            console.log(id);
+            console.log(this.props.orderDetails);
+
+
             const unique = [...new Set(this.props.orderDetails.order.data[id].ingredients)];
-            console.log(unique)
+            console.log(unique);
             let display = unique.map(item => {
                 return <li>{item}:
                     <span>{this.ingrCounter(this.props.orderDetails.order.data[id].ingredients, item)}</span>
                 </li>
-            })
+            });
             order = (
                 <div>
                     <Burger ingredients={this.props.orderDetails.order.data[id].ingredients}/>
@@ -33,7 +38,7 @@ class ViewOrder extends Component {
                         <p style={{fontSize: '20px'}}>
                             Price: <strong>
                             <span>{this.props.orderDetails.order.data[id].price.toFixed(2)}$</span>
-                            </strong>
+                        </strong>
                         </p>
                     </div>
 

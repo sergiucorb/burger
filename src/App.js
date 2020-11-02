@@ -7,8 +7,14 @@ import Orders from "./containers/Orders/Orders";
 import ViewOrder from "./components/Order/ViewOrder/ViewOrder";
 import Auth from "./containers/Auth/Auth";
 import Logout from "./containers/Auth/Logout/Logout";
+import {authCheckState} from "./store/actions/auth";
+import {connect} from "react-redux";
 
 class App extends Component {
+    componentDidMount() {
+        this.props.onAuthCheck()
+    }
+
     render() {
         return (
             <div>
@@ -27,4 +33,9 @@ class App extends Component {
     }
 }
 
-export default App;
+const mapDispatchToProps = dispatch => {
+    return {
+        onAuthCheck: () => dispatch(authCheckState())
+    }
+}
+export default connect(null, mapDispatchToProps)(App);

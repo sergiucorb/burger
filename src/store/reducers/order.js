@@ -59,7 +59,7 @@ export const order = (state = initialState, action) => {
                 viewRedirect: false
             }
 
-        case (GET_ORDERS_START):
+        case GET_ORDERS_START:
             return {
                 ...state,
                 loading: true

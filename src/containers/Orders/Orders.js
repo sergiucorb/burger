@@ -26,8 +26,8 @@ class Orders extends Component {
                 console.log(order)
                 return <Order ingredients={order.ingredients}
                               price={order.price}
-                              delete={() => this.props.onDelete(order.id)}
-                              view={() => this.props.onView(order.id)}
+                              delete={() => this.props.onDelete(order.id, this.props.token)}
+                              view={() => this.props.onView(order.id, this.props.token)}
                               key={index}/>
             })
         }
@@ -46,7 +46,7 @@ const mapStateToProps = state => {
         redirect: state.order.viewRedirect,
         viewOrderId: state.order.viewOrder,
         isAuth: state.auth.isAuth,
-        token:state.auth.token
+        token: state.auth.token
     }
 }
 
@@ -55,7 +55,7 @@ const mapDispatchToProps = dispatch => {
     return {
         getOrders: (token) => dispatch(getOrders(token)),
         onDelete: (order) => dispatch(onDelete(order)),
-        onView: (orderId) => dispatch(onView(orderId)),
+        onView: (orderId, token) => dispatch(onView(orderId, token)),
         switchRedirectToFalse: () => dispatch(switchRedirectToFalse()),
     }
 }
