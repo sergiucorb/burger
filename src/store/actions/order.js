@@ -65,10 +65,11 @@ const getOrderFail = () => {
         type: GET_ORDERS_FAIL
     }
 }
-export const getOrders = (token) => {
+export const getOrders = (token,userId) => {
     return dispatch => {
+        const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo="' + userId + '"';
         dispatch(getOrderStart())
-        axios.get('https://react-burger-7e1a4.firebaseio.com/orders.json?auth=' + token)
+        axios.get('https://react-burger-7e1a4.firebaseio.com/orders.json'+queryParams)
             .then(res => {
                 let fetchingOrders = [];
                 for (let key in res.data) {

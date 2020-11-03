@@ -9,15 +9,12 @@ import {connect} from "react-redux";
 class Orders extends Component {
 
     componentDidMount() {
-        this.props.getOrders(this.props.token);
-        // this.props.switchRedirectToFalse();
+        this.props.getOrders(this.props.token,this.props.userId);
     }
 
 
     render() {
-        console.log(this.props.isAuth)
         if (this.props.redirect && this.props.orders) {
-            console.log('redirect true')
             this.props.history.push('/orders/' + this.props.viewOrderId.id);
         }
         let orders = <Spinner/>
@@ -46,14 +43,15 @@ const mapStateToProps = state => {
         redirect: state.order.viewRedirect,
         viewOrderId: state.order.viewOrder,
         isAuth: state.auth.isAuth,
-        token: state.auth.token
+        token: state.auth.token,
+        userId:state.auth.userId
     }
 }
 
 
 const mapDispatchToProps = dispatch => {
     return {
-        getOrders: (token) => dispatch(getOrders(token)),
+        getOrders: (token,userId) => dispatch(getOrders(token,userId)),
         onDelete: (order) => dispatch(onDelete(order)),
         onView: (orderId, token) => dispatch(onView(orderId, token)),
         switchRedirectToFalse: () => dispatch(switchRedirectToFalse()),
