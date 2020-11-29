@@ -43,6 +43,7 @@ class BurgerBuilder extends PureComponent {
     };
 
     render() {
+        console.log(this.props.ingredientsBlock)
         let orderSpinner = <OrderSummary allIngredients={this.props.ingredientsBlock}
                                          ingredients={this.props.ingredients}
                                          closeModal={this.closeModal}
@@ -51,7 +52,7 @@ class BurgerBuilder extends PureComponent {
 
         let burger = !this.props.error ? <Spinner/> : <p style={{textAlign: 'center'}}>Ingredients can't be loaded!</p>;
 
-        if (this.props.ingredientsBlock.length > 0) {
+        if (true ){
             burger = (
                 <Aux>
                     <Burger ingredients={this.props.ingredients}/>

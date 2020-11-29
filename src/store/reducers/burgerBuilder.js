@@ -25,8 +25,7 @@ export const burgerBuilder = (state = initialState, action) => {
                 error: !state.error,
                 ingredientsBlock: ingredientsBlock
             };
-
-        case(FETCH_INGREDIENTS_FAILED):
+        case FETCH_INGREDIENTS_FAILED:
             return {
                 ...state,
                 error: !state.error
@@ -55,7 +54,7 @@ export const burgerBuilder = (state = initialState, action) => {
                 price: decreasePrice
             };
 
-        case (RESET_BURGER):
+        case RESET_BURGER:
             return {
                 ...state,
                 price: 0,
