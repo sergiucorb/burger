@@ -1,53 +1,59 @@
-import React, {Component} from 'react'
+import React, {useState,useEffect} from 'react'
 import Input from "../../components/UI/Input/Input";
 import classes from './Auth.css'
 import Button from "../../components/UI/Button/Button";
-import {connect} from "react-redux";
+import {useDispatch,useSelector} from "react-redux";
 import {onAuthSubmit} from "../../store/actions";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import {Redirect, withRouter} from "react-router";
 
-class Auth extends Component {
-
-    state = {
-        controls: {
-            email: {
-                elementType: 'input',
-                elementConfig: {
-                    type: 'email',
-                    placeholder: 'Your Email'
-                },
-                value: '',
-                validation: {
-                    isEmail: true,
-                    required: true,
-                    minLength: 5,
-                    maxLength: 20,
-                },
-                valid: false,
-                touched: false
-            },
-            password: {
-                elementType: 'input',
-                elementConfig: {
-                    type: 'password',
-                    placeholder: 'Your Password'
-                },
-                value: '',
-                validation: {
-                    required: true,
-                    isPassword: true,
-                    minLength: 5,
-                    maxLength: 10,
-                },
-                valid: false,
-                touched: false
-            },
+const Auth =(props)=> {
+const [state,setState] = useState(
+    { 
+    controls: {
+        email: {
+        elementType: 'input',
+        elementConfig: {
+            type: 'email',
+            placeholder: 'Your Email'
         },
-        isValidForm: false,
-        isSignIn: true
-    }
-    checkValidation = (value, rules) => {
+        value: '',
+        validation: {
+            isEmail: true,
+            required: true,
+            minLength: 5,
+            maxLength: 20,
+        },
+        valid: false,
+        touched: false
+    },
+        password: {
+            elementType: 'input',
+            elementConfig: {
+            type: 'password',
+            placeholder: 'Your Password'
+        },
+        value: '',
+        validation: {
+            required: true,
+            isPassword: true,
+            minLength: 5,
+            maxLength: 10,
+        },
+        valid: false,
+        touched: false
+        },
+        },
+    isValidForm: false,
+    isSignIn: true})
+
+   const authRedirect = useSelector(state=>state.auth.redirect) 
+   const error = useSelector(state=>state.auth.error) 
+   const loading = useSelector(state=>state.auth.loading) 
+
+   const dispatch = useDispatch();
+
+   const checkValidation = (value, rules) => {
         let isValid = true;
         if (!rules) {
             return true;
@@ -68,13 +74,13 @@ class Auth extends Component {
         return isValid
     };
 
-    inputChangeHandler = (event, input) => {
+   const  inputChangeHandler = (event, input) => {
         const controls = {
-            ...this.state.controls,
+            ...state.controls,
             [input]: {
-                ...this.state.controls[input],
+                ...state.controls[input],
                 value: event.target.value,
-                valid: this.checkValidation(event.target.value, this.state.controls[input].validation),
+                valid: checkValidation(event.target.value, state.controls[input].validation),
                 touched: true
             }
         }
@@ -82,34 +88,34 @@ class Auth extends Component {
         for (let val in controls) {
             isValidForm = controls[val].valid && isValidForm
         }
-        this.setState({controls: controls, isValidForm: isValidForm});
+        setState({...state,controls: controls, isValidForm: isValidForm});
     }
-    onSubmitHandler = (event) => {
+    const onSubmitHandler = (event) => {
         event.preventDefault();
-        this.props.onAuthSubmit(this.state.controls.email.value, this.state.controls.password.value, this.state.isSignIn);
-        this.setState({
-            ...this.state,
+        dispatch(onAuthSubmit(state.controls.email.value, state.controls.password.value, state.isSignIn))
+        setState({
+            ...state,
             isValidForm: false
         })
     }
-    onSwitchSignIn = () => {
-        this.setState(prevState => {
+    const onSwitchSignIn = () => {
+        setState(prevState => {
             return {
+                ...state,
                 isSignIn: !prevState.isSignIn
             }
         })
     }
 
 
-    render() {
-        if (this.props.authRedirect) {
+        if (authRedirect) {
             return <Redirect to={'/'}/>
         }
         let formControls = [];
-        for (let key in this.state.controls) {
+        for (let key in state.controls) {
             formControls.push({
                 id: key,
-                config: this.state.controls[key]
+                config: state.controls[key]
             })
         }
 
@@ -120,14 +126,14 @@ class Auth extends Component {
                           elementConfig={input.config.elementConfig}
                           invalid={!input.config.valid}
                           touched={input.config.touched}
-                          changed={(event) => this.inputChangeHandler(event, input.id)}
+                          changed={(event) => inputChangeHandler(event, input.id)}
                           shouldValidate={input.config.validation}/>
         })
-        if (this.props.loading) {
+        if (loading) {
             form = <Spinner/>
         }
         let errorMessage = null;
-        if (this.props.error) {
+        if (error) {
             errorMessage = (
                 <p style={{
                     color: 'red',
@@ -137,7 +143,7 @@ class Auth extends Component {
                     padding: '10px',
                     margin: '20px auto'
                 }}>
-                    {this.props.error}
+                    {error}
                 </p>
             )
         }
@@ -145,30 +151,15 @@ class Auth extends Component {
         return (
             <div className={classes.Auth}>
                 {errorMessage}
-                <form onSubmit={this.onSubmitHandler}>
+                <form onSubmit={onSubmitHandler}>
                     {form}
-                    <Button disabled={!this.state.isValidForm} btnType='Success'>SUBMIT</Button><br/>
+                    <Button disabled={!state.isValidForm} btnType='Success'>SUBMIT</Button><br/>
 
                 </form>
-                <Button clicked={this.onSwitchSignIn}
-                        btnType='Info'>SWITCH TO {this.state.isSignIn ? 'SIGN IN' : "SIGN UP"}</Button>
+                <Button clicked={onSwitchSignIn}
+                        btnType='Info'>SWITCH TO {state.isSignIn ? 'SIGN IN' : "SIGN UP"}</Button>
             </div>
         )
-    }
+    
 }
-
-const mapDispatchToProps = dispatch => {
-    return {
-        onAuthSubmit: (email, password, isSignIn) => dispatch(onAuthSubmit(email, password, isSignIn))
-    }
-}
-const mapStateToProps = state => {
-    return {
-        loading: state.auth.loading,
-        error: state.auth.error,
-        isAuth: state.auth.token !== null,
-        authRedirect: state.auth.redirect
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Auth));
+export default withRouter(Auth);
